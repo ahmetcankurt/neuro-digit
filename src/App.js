@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import Drawing from "./component/Drawing";
 import PredictionChart from "./component/PredictionChart";
-import { BsArrowCounterclockwise } from "react-icons/bs";
+import { BsArrowCounterclockwise, BsPencilFill, BsX } from "react-icons/bs";
 import CustomTooltip from "./component/Tooltip";
 import { loadFull } from "tsparticles";
 import particlesOptions from "./assest/json/particles.json";
@@ -44,6 +44,17 @@ const App = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [x1Value, setX1Value] = useState(1.0);
   const [normalizedGrid, setNormalizedGrid] = useState(null);
+
+  const [isMobileCanvasOpen, setIsMobileCanvasOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (init) {
@@ -187,65 +198,67 @@ const App = () => {
 
       <div className="dashboard-grid">
         {/* Sol Panel: Çizim Alanı */}
-        <div className="glass-panel">
-          <div className="panel-header">
-            <h3 className="panel-title">Çizim Alanı</h3>
-            <CustomTooltip
-              content="Tuvali Temizle"
-              position="top"
-              color="#f8fafc"
-              backgroundColor="rgba(15, 23, 42, 0.95)"
-              borderRadius="12px"
-              fontSize="12px"
-            >
-              <BsArrowCounterclockwise
-                className="return-icon"
-                onClick={clearCanvas}
-              />
-            </CustomTooltip>
-          </div>
+        {!isMobile && (
+          <div className="glass-panel">
+            <div className="panel-header">
+              <h3 className="panel-title">Çizim Alanı</h3>
+              <CustomTooltip
+                content="Tuvali Temizle"
+                position="top"
+                color="#f8fafc"
+                backgroundColor="rgba(15, 23, 42, 0.95)"
+                borderRadius="12px"
+                fontSize="12px"
+              >
+                <BsArrowCounterclockwise
+                  className="return-icon"
+                  onClick={clearCanvas}
+                />
+              </CustomTooltip>
+            </div>
 
-          <Drawing
-            strokes={strokes}
-            isDrawing={isDrawing}
-            addStroke={(point) => {
-              setStrokes([...strokes, [point]]);
-              setIsDrawing(true);
-            }}
-            addStrokePos={(point) => {
-              if (isDrawing) {
-                setStrokes(
-                  strokes.map((stroke, idx) =>
-                    idx === strokes.length - 1 ? [...stroke, point] : stroke
-                  )
-                );
-              }
-            }}
-            endStroke={endStroke}
-            canvasRef={canvasRef}
-          />
-          <div className="badge-row flex justify-between items-center mt-4 pt-3 border-t border-slate-800/60 text-sm">
-            <span className="text-slate-400">Sistem Durumu:</span>
-            {prediction !== null ? (
-              prediction === -1 ? (
-                <div className="status-pill warning">
-                  <span className="status-dot"></span>
-                  <span>Belirsiz (Çizim Tanımlanamadı)</span>
-                </div>
+            <Drawing
+              strokes={strokes}
+              isDrawing={isDrawing}
+              addStroke={(point) => {
+                setStrokes([...strokes, [point]]);
+                setIsDrawing(true);
+              }}
+              addStrokePos={(point) => {
+                if (isDrawing) {
+                  setStrokes(
+                    strokes.map((stroke, idx) =>
+                      idx === strokes.length - 1 ? [...stroke, point] : stroke
+                    )
+                  );
+                }
+              }}
+              endStroke={endStroke}
+              canvasRef={canvasRef}
+            />
+            <div className="badge-row flex justify-between items-center mt-4 pt-3 border-t border-slate-800/60 text-sm">
+              <span className="text-slate-400">Sistem Durumu:</span>
+              {prediction !== null ? (
+                prediction === -1 ? (
+                  <div className="status-pill warning">
+                    <span className="status-dot"></span>
+                    <span>Belirsiz (Çizim Tanımlanamadı)</span>
+                  </div>
+                ) : (
+                  <div className="status-pill predicting">
+                    <span className="status-dot"></span>
+                    <span>Tahmin: {prediction} (%{(predictionProbabilities[prediction] * 100).toFixed(1)})</span>
+                  </div>
+                )
               ) : (
-                <div className="status-pill predicting">
+                <div className="status-pill ready">
                   <span className="status-dot"></span>
-                  <span>Tahmin: {prediction} (%{(predictionProbabilities[prediction] * 100).toFixed(1)})</span>
+                  <span>Analize Hazır</span>
                 </div>
-              )
-            ) : (
-              <div className="status-pill ready">
-                <span className="status-dot"></span>
-                <span>Analize Hazır</span>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Orta Panel: Yapay Sinir Ağı Görselleştiricisi */}
         <div className="glass-panel">
@@ -287,28 +300,28 @@ const App = () => {
                 onClick={() => setActiveTab(0)}
               >
                 <span className="tab-icon">🔢</span>
-                <span>1. GİRDİ KATMANI (Piksel Verisi)</span>
+                <span>{isMobile ? "1. Girdi" : "1. GİRDİ KATMANI (Piksel Verisi)"}</span>
               </button>
               <button 
                 className={`edu-tab-btn ${activeTab === 1 ? 'active' : ''}`}
                 onClick={() => setActiveTab(1)}
               >
                 <span className="tab-icon">🧮</span>
-                <span>2. NET GİRDİ TOPLAMI (Ağırlık & Bias)</span>
+                <span>{isMobile ? "2. Net Toplam" : "2. NET GİRDİ TOPLAMI (Ağırlık & Bias)"}</span>
               </button>
               <button 
                 className={`edu-tab-btn ${activeTab === 2 ? 'active' : ''}`}
                 onClick={() => setActiveTab(2)}
               >
                 <span className="tab-icon">📈</span>
-                <span>3. AKTİVASYON (Tanh Ateşleme)</span>
+                <span>{isMobile ? "3. Aktivasyon" : "3. AKTİVASYON (Tanh Ateşleme)"}</span>
               </button>
               <button 
                 className={`edu-tab-btn ${activeTab === 3 ? 'active' : ''}`}
                 onClick={() => setActiveTab(3)}
               >
                 <span className="tab-icon">👁️</span>
-                <span>4. ÇIKTI & SOFTMAX (Olasılık)</span>
+                <span>{isMobile ? "4. Softmax" : "4. ÇIKTI & SOFTMAX (Olasılık)"}</span>
               </button>
             </div>
 
@@ -539,6 +552,86 @@ const App = () => {
       <div className="footer-banner">
         © 2026 Powered by Ahmet Cankurt & Antigravity
       </div>
+
+      {/* Mobil Yüzen Buton (FAB) */}
+      {isMobile && (
+        <button 
+          className="mobile-fab"
+          onClick={() => setIsMobileCanvasOpen(true)}
+        >
+          <BsPencilFill />
+          <span>Çizim Yap</span>
+        </button>
+      )}
+
+      {/* Mobil Çizim Paneli Arka Plan Karartısı (Overlay) */}
+      {isMobile && (
+        <div 
+          className={`mobile-sheet-overlay ${isMobileCanvasOpen ? "open" : ""}`}
+          onClick={() => setIsMobileCanvasOpen(false)}
+        />
+      )}
+
+      {/* Mobil Çizim Paneli (Bottom Sheet) */}
+      {isMobile && (
+        <div className={`mobile-bottom-sheet ${isMobileCanvasOpen ? "open" : ""}`}>
+          <div className="mobile-sheet-handle" onClick={() => setIsMobileCanvasOpen(false)} />
+          <div className="mobile-sheet-header">
+            <span className="mobile-sheet-title">Çizim Paneli</span>
+            <button className="mobile-sheet-close" onClick={() => setIsMobileCanvasOpen(false)}>
+              <BsX size={20} />
+            </button>
+          </div>
+          <div className="mobile-sheet-content">
+            <Drawing
+              strokes={strokes}
+              isDrawing={isDrawing}
+              addStroke={(point) => {
+                setStrokes([...strokes, [point]]);
+                setIsDrawing(true);
+              }}
+              addStrokePos={(point) => {
+                if (isDrawing) {
+                  setStrokes(
+                    strokes.map((stroke, idx) =>
+                      idx === strokes.length - 1 ? [...stroke, point] : stroke
+                    )
+                  );
+                }
+              }}
+              endStroke={endStroke}
+              canvasRef={canvasRef}
+            />
+            
+            <div className="w-full flex justify-between items-center mt-4 pt-3 border-t border-slate-800/60" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                {prediction !== null ? (
+                  prediction === -1 ? (
+                    <div className="status-pill warning">
+                      <span className="status-dot"></span>
+                      <span>Belirsiz</span>
+                    </div>
+                  ) : (
+                    <div className="status-pill predicting">
+                      <span className="status-dot"></span>
+                      <span>Tahmin: {prediction} ({ (predictionProbabilities[prediction] * 100).toFixed(1) }%)</span>
+                    </div>
+                  )
+                ) : (
+                  <div className="status-pill ready">
+                    <span className="status-dot"></span>
+                    <span>Hazır</span>
+                  </div>
+                )}
+              </div>
+              
+              <button className="return-icon" onClick={clearCanvas}>
+                <BsArrowCounterclockwise />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
