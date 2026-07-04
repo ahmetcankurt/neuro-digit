@@ -1,8 +1,8 @@
 {
-  "name": "draw-predict",
+  "name": "neuro-digit",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ahmetcankurt.github.io/draw-predict/",
+  "homepage": "https://ahmetcankurt.github.io/neuro-digit/",
   "dependencies": {
     "@tensorflow/tfjs": "^4.20.0",
     "@tensorflow/tfjs-backend-cpu": "^4.20.0",
