@@ -90,7 +90,8 @@ body {
 .canvas {
   width: 100%;
   max-width: 280px;
-  height: 280px;
+  aspect-ratio: 1 / 1;
+  height: auto;
   border: 2px solid rgba(255, 255, 255, 0.08);
   background-color: #0b0f19;
   touch-action: none;
@@ -514,14 +515,84 @@ body {
   .education-panel {
     grid-column: span 1;
     margin-top: 20px;
+    padding: 16px;
+  }
+
+  .edu-console-layout {
+    flex-direction: column;
+    gap: 12px;
+    min-height: auto;
   }
 
   .edu-console-sidebar {
     flex-direction: column;
+    gap: 8px;
+    width: 100%;
   }
 
   .edu-tab-btn {
     flex: 1 1 auto;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .edu-console-screen {
+    padding: 16px;
+    gap: 14px;
+    border-radius: 16px;
+  }
+
+  .edu-screen-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+
+  .edu-screen-title {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .edu-screen-badge {
+    font-size: 0.7rem;
+    align-self: flex-start;
+  }
+
+  .edu-screen-body {
+    font-size: 0.85rem;
+    gap: 12px;
+  }
+
+  .edu-interactive-area {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .edu-code-block {
+    padding: 12px;
+    font-size: 0.78rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .edu-slider-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .edu-slider-label {
+    min-width: unset;
+  }
+
+  .edu-slider-value {
+    text-align: left;
   }
 }
 
