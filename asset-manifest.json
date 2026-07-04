@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/neuro-digit/static/css/main.d47014b5.css",
-    "main.js": "/neuro-digit/static/js/main.14403044.js",
+    "main.css": "/neuro-digit/static/css/main.ae76cf88.css",
+    "main.js": "/neuro-digit/static/js/main.b2e34c7b.js",
     "static/js/453.bd34a948.chunk.js": "/neuro-digit/static/js/453.bd34a948.chunk.js",
     "index.html": "/neuro-digit/index.html",
-    "main.d47014b5.css.map": "/neuro-digit/static/css/main.d47014b5.css.map",
-    "main.14403044.js.map": "/neuro-digit/static/js/main.14403044.js.map",
+    "main.ae76cf88.css.map": "/neuro-digit/static/css/main.ae76cf88.css.map",
+    "main.b2e34c7b.js.map": "/neuro-digit/static/js/main.b2e34c7b.js.map",
     "453.bd34a948.chunk.js.map": "/neuro-digit/static/js/453.bd34a948.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d47014b5.css",
-    "static/js/main.14403044.js"
+    "static/css/main.ae76cf88.css",
+    "static/js/main.b2e34c7b.js"
   ]
 }
